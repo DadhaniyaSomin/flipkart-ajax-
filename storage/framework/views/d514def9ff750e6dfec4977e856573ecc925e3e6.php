@@ -1,0 +1,1 @@
+<?php /**PATH E:\laravel\CRUD_YAJRA\resources\views\user\index.blade.php ENDPATH**/ ?>
