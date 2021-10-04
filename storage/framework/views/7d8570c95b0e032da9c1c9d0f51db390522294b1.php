@@ -12,13 +12,12 @@
 
     <!-- Scripts -->
     <script src="<?php echo e(asset('js/app.js')); ?>" defer></script>
-    <script src="<?php echo e(asset('validation/javalidation/jqBootstrapValidation.js')); ?>" ></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
-    
-    
+
+
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
@@ -37,7 +36,7 @@
 <body>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
+            <div class="container-fluid">
                 <a class="navbar-brand" href="<?php echo e(url('/')); ?>">
                     <?php echo e(config('app.name', 'Amazon')); ?>
 
@@ -70,6 +69,7 @@
                                 </li>
                             <?php endif; ?>
                         <?php else: ?>
+                            
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -79,7 +79,7 @@
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="<?php echo e(route('logout')); ?>" onclick="event.preventDefault();
-                                                         document.getElementById('logout-form').submit();">
+                                                             document.getElementById('logout-form').submit();">
                                         <?php echo e(__('Logout')); ?>
 
                                     </a>
@@ -99,8 +99,8 @@
         <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
                 crossorigin="anonymous"></script>
         <script type="text/javascript" src="cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
-        
-        
+
+
         <main class="py-4">
             <?php echo $__env->yieldContent('content'); ?>
         </main>

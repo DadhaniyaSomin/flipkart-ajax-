@@ -71,6 +71,14 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required|max:s20',
+            'description' => 'required|max:255',
+            'price' => 'required',
+            //'image' => 'required',
+            'price' => 'required|numeric ',
+            'image' => 'required| mimes:jpeg,bmp,png',
+        ]);
 
 
         if ($request->has('image')) {
@@ -81,16 +89,7 @@ class ProductController extends Controller
             $dd = $file->move(public_path($path), $filename);
         }
 
-        //  // form submit karie ne ama problem 6e 
-        // if ($request->hasFile('image')) {
-
-        //     $image = $request->file('image');
-
-        //     $name = time().rand(1, 99999) . "." . $image->getClientOriginalExtension();
-        //     $image->public_path('image/', $name);
-        //     // dd($image);
-        // }
-
+       
         $products = new Products();
         $products->name = $request->name;
         $products->description = $request->des;
@@ -148,7 +147,6 @@ class ProductController extends Controller
         // }
               
         $data = products::where('id',$id)->first();
-        //  dd($data);
         return response()->json($data);
 
     }
@@ -163,12 +161,12 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
 
-        // $request->validate([
-        //     'name' => 'required|max:s20',
-        //     'description' => 'required|max:255',
-        //     'price' => 'required|numeric',
+        $request->validate([
+            'name' => 'required|max:s20',
+            'description' => 'required|max:255',
+            'price' => 'required|numeric',
 
-        // ]);
+        ]);
 
 
         $products = Products::find($id);

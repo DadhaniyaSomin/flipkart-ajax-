@@ -24,12 +24,27 @@ class CategoryController extends Controller
     {
         //
         $category = [];
-        if($request->ajax())
-        {
+        if ($request->ajax()) {
             $data = category::get();
             return DataTables::of($data)
                    ->addIndexColumn()
-                   ->make(true);  
+                   ->addColumn('action', function ($row) {
+                       if (Auth::user()->role_id == 2) {
+                           if (Auth::user()->id == $row->user_id) {
+                               $btn = '<div class="form-group">
+                            <button type="button" class="btn btn-success category_edit" data-toggle="modal" data-target="#update_modal" data-id="' . $row->id . '" ><i class="fa fa-edit"></i></button>
+                            <button type="button" class="btn btn-danger category_delete" data-toggle="modal" data-target="#modalConfirmDelete" data-id="' . $row->id . '" ><i class="fa fa-trash"></i></button></div>';
+                               return $btn;
+                           }
+                       } elseif (Auth::user()->role_id == 1) {
+                           $btn = '<div class="form-group">
+                        <button type="button" class="btn btn-success category_edit" data-toggle="modal" data-target="#update_modal" data-id="' . $row->id . '" ><i class="fa fa-edit"></i></button>
+                            <button type="button" class="btn btn-danger category_delete" data-toggle="modal" data-target="#modalConfirmDelete" data-id="' . $row->id . '"><i class="fa fa-trash"></i></button></div>';
+                           return $btn;
+                       }
+                   })
+                ->rawColumns(['action'])
+                ->make(true);
         }
         return view('categories.index', compact('category'));
     }
@@ -53,30 +68,24 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+     
 
-        $request->validate([
-            'name' => 'required|max:s20',
-            'icon' => 'required',
-            
-        ]);
-
-        if ($request->hasFile('icon')) {
-            //
-            $icon = $request->file('icon');
-            $path = public_path('icon');
-            $name = time().rand(1, 99999) . "." . $icon->getClientOriginalExtension();
-            $icon->move($path, $name);
-            // dd($path);
-        }
+        // if ($request->hasFile('icon')) {
+        //     //
+        //     $icon = $request->file('icon');
+        //     $path = public_path('icon');
+        //     $name = time().rand(1, 99999) . "." . $icon->getClientOriginalExtension();
+        //     $icon->move($path, $name);
+        //     // dd($path);
+        // }
      
         //
         $category = new Category();
         $category->c_name = $request->c_name;
-        $category->created_by =  Auth::user()->role_id;
-        $category->icon = isset($name) ? $name : "";
+        $category->created_by = Auth::user()->role_id;
         //dd($category);
         $save = $category->save();
-        if ($category) {
+        if ($save) {
             return redirect()->route('categories.index');
         }
     }
@@ -104,13 +113,8 @@ class CategoryController extends Controller
     {
         //
         $data = category::find($id);
-        
-        if (Auth::user()->id == $data->user_id || Auth::user()->role_id==1) {
-            $category = category::find($id);
-            return view('categories.edit', compact('category'));
-        } else {
-            return redirect()->route('category.index');
-        }
+
+        return response()->json($data);
     }
     
 
@@ -123,8 +127,6 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-
-
         $category = category::find($id);
         $category->c_name = $request->c_name;
         $save = $category->update();
@@ -141,18 +143,11 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
-        $data = category::find($id);
-        
-        if (Auth::user()->id == $data->user_id || Auth::user()->role_id=1) {
-            
-            $category = category::find($id);
-            $category->Products()->detach();
-            $category = category::where('id', $id)->delete();
-            return redirect()->route('categories.index');
-        } else {
-            return redirect()->route('categories.index');
-        }
+        //   
+        $category1 = category::find($id);
+        $category1->Products()->detach();
+        $category = category::where('id', $id)->delete();
+        return redirect()->route('categories.index');
     }
 }
 
